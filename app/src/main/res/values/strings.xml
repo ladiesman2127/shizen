@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Shizen</string>
+    <string name="book_cover">Cover</string>
+    <string name="epub_navigator_tag">epub_navigator</string>
+    <string name="close_the_book">Close the book</string>
+    <string name="reader_settings">Reader settings</string>
+    <string name="book_content">Book content</string>
+    <string name="sort">Sort</string>
+    <string name="search">Search</string>
+    <string name="book_contents">CONTENTS</string>
+    <string name="close_the_book_description">Close the book description</string>
+    <string name="title_activity_video">VideoActivity</string>
+    <string name="title_activity_book">BookActivity</string>
+    <string name="title_activity_reader">ReaderActivity</string>
+    <string name="remove_selected">Remove selected</string>
+    <string name="select_all_items">Select all items</string>
+    <string name="clear_selection">Clear selection</string>
+    <string name="delete_icon">Delete icon</string>
+    <string name="remove_books">Remove books</string>
+    <string name="title">Title</string>
+    <string name="date">Date</string>
+    <string name="status">Status</string>
+    <string name="author">Author</string>
+    <string name="language">Language</string>
+    <string name="adding_a_book">Adding a book. Please wait…</string>
+    <string name="adding_books">Adding books. Please wait…</string>
+    <string name="added_successfully">" added successfully"</string>
+    <string name="failed_to_add_book">Failed to add book</string>
+    <string name="add_to_the_dictionary">Add to the Dictionary</string>
+    <string name="add">Add</string>
+    <string name="add_cover">Add cover</string>
+    <string name="update_cover">Update cover</string>
+    <string name="resume_or_start">Resume or start</string>
+    <string name="add_content">Add content</string>
+    <string name="delete_content">Delete content</string>
+    <string name="word_image">Word image</string>
+</resources>
