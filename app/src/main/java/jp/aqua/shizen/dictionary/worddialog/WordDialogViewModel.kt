@@ -1,4 +1,4 @@
-package jp.aqua.shizen.dictionary.word
+package jp.aqua.shizen.dictionary.worddialog
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

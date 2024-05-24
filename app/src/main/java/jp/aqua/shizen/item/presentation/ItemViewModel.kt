@@ -21,7 +21,7 @@ open class ItemViewModel(
     private val itemRepository: ItemRepository
 ) : ViewModel() {
 
-    protected var _uiState = MutableStateFlow(ItemUiState())
+    private var _uiState = MutableStateFlow(ItemUiState())
     val uiState = _uiState.asStateFlow()
 
     private var _itemID: Int = checkNotNull(savedStateHandle[Item.ID])

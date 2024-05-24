@@ -1,5 +1,4 @@
 package jp.aqua.shizen
-
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
@@ -15,9 +14,7 @@ import jp.aqua.shizen.read.presentation.ReadViewModel
 import jp.aqua.shizen.read.book.presentation.BookViewModel
 import jp.aqua.shizen.read.reader.presentation.ReaderViewModel
 import org.readium.r2.shared.ExperimentalReadiumApi
-
 object AppViewModelProvider {
-
     @OptIn(ExperimentalReadiumApi::class)
     val Factory = viewModelFactory {
         initializer {
@@ -48,7 +45,6 @@ object AppViewModelProvider {
                 application().readerRepository,
             )
         }
-
         initializer {
             PlayerViewModel(
                 createSavedStateHandle(),
@@ -56,13 +52,11 @@ object AppViewModelProvider {
                 application().videoRepository
             )
         }
-
         initializer {
             DictionaryViewModel(
                 application().deckRepository
             )
         }
-
         initializer {
             DeckViewModel(
                 createSavedStateHandle(),

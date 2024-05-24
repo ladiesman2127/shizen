@@ -4,18 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import jp.aqua.shizen.item.presentation.ItemDescriptionScreen
 import jp.aqua.shizen.item.presentation.ItemUiState
 import jp.aqua.shizen.read.reader.ReaderActivity
-import jp.aqua.shizen.read.reader.data.BookInitData
-import jp.aqua.shizen.utils.dialog.ShizenFullScreenDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.readium.r2.shared.util.Try
 
 @Composable
 fun BookScreen(
@@ -25,12 +21,13 @@ fun BookScreen(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     onNavigateUp: () -> Unit
 ) {
+    val knownWords by viewModel.getKnownWords().collectAsState(emptyList())
     ItemDescriptionScreen(
         uiState = uiState,
         navigateUp = onNavigateUp,
         onOpen = { tocEntry ->
             coroutineScope.launch {
-                viewModel.updateCurrentBook(uiState.id, tocEntry)
+                viewModel.updateCurrentBook(uiState.id, tocEntry, knownWords)
                     ?.onSuccess {
                         Log.i("Current book updated successfully", it.book.title)
                         Intent(context, ReaderActivity::class.java).apply {

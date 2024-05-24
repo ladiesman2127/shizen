@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:name=".Application"
@@ -18,25 +17,21 @@
             android:name=".read.book.BookActivity"
             android:label="@string/title_activity_book"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
-
         </activity>
         <activity
             android:name=".listen.video.VideoActivity"
             android:label="@string/title_activity_video"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
-
         </activity>
         <activity
             android:name=".read.reader.ReaderActivity"
             android:label="@string/title_activity_reader"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
-
         </activity>
         <activity
             android:name=".listen.player.PlayerActivity"
             android:label="PlayerActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
-
         </activity>
         <activity
             android:name=".dictionary.deck.DeckActivity"
@@ -50,10 +45,9 @@
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
-
 </manifest>
+

@@ -1,16 +1,14 @@
 package jp.aqua.shizen.listen.player
 
-import android.media.audiofx.Equalizer
 import androidx.annotation.OptIn
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.exoplayer.ExoPlayer
 import jp.aqua.shizen.item.data.ItemRepository
 import jp.aqua.shizen.item.model.Item
-import jp.aqua.shizen.dictionary.word.WordDialogViewModel
+import jp.aqua.shizen.dictionary.worddialog.WordDialogViewModel
 import jp.aqua.shizen.item.model.TocEntry
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

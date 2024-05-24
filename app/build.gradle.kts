@@ -6,8 +6,6 @@ plugins {
     alias(libs.plugins.kotlinParcelize)
     alias(libs.plugins.ksp)
 }
-
-
 android {
     namespace = "jp.aqua.shizen"
     compileSdk = 34

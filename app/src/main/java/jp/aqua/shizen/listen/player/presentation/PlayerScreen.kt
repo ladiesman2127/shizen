@@ -1,7 +1,6 @@
 package jp.aqua.shizen.listen.player.presentation
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
 import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -16,17 +15,15 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.media3.common.C
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.PlayerView
-import jp.aqua.shizen.dictionary.word.WordDialog
-import jp.aqua.shizen.dictionary.word.WordDialogUiState
+import jp.aqua.shizen.dictionary.worddialog.WordDialog
+import jp.aqua.shizen.dictionary.worddialog.WordDialogUiState
 import jp.aqua.shizen.listen.player.PlayerViewModel
 import jp.aqua.shizen.utils.extensions.getText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.io.ByteArrayOutputStream
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(UnstableApi::class)

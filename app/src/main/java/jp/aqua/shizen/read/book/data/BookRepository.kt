@@ -1,8 +1,11 @@
 package jp.aqua.shizen.read.book.data
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import jp.aqua.shizen.dictionary.knownwords.data.KnownWordsDao
+import jp.aqua.shizen.dictionary.knownwords.model.KnownWords
 import jp.aqua.shizen.item.data.ItemRepository
 import jp.aqua.shizen.item.model.Item
 import jp.aqua.shizen.item.model.TocEntry
@@ -27,6 +30,7 @@ import java.io.IOException
 class BookRepository(
     private val readium: Readium,
     private val bookDao: BookDao,
+    private val wordsDao: KnownWordsDao,
     private val storageDir: File,
     private val coverDir: File
 ) : ItemRepository {
@@ -46,18 +50,24 @@ class BookRepository(
 
     override suspend fun updateItem(item: Item) = bookDao.updateBook(item)
 
+    fun getKnownWords(): Flow<List<KnownWords>> = wordsDao.getKnownWords()
+
     suspend fun addBook(
         uri: Uri,
         context: Context
     ): Result<String> = withContext(Dispatchers.IO) {
         try {
+            Log.i("URI", uri.toString())
             // Входной поток файла
             val inputStream = context.contentResolver.openInputStream(uri)
             // Книга обработанная через библиотеку EpubLib
             val book = EpubReader().readEpub(inputStream)
             inputStream?.close()
+            // Сохранение модифицированной книги и возврат ее директории
             val bookDir = book.storeParsedBook(storageDir)
+            // Сохранение обложки
             val bookCover = book.storeCoverImage(coverDir)
+            // Получение содержания книги
             val toc = getToc(readium, bookDir)
             // Добавление книги в базу данных
             insertBookIntoDatabase(bookDir.path, bookCover.path, book, toc)

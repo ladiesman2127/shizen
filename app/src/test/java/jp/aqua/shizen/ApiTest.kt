@@ -13,7 +13,7 @@ import org.junit.Test
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-class WordDialogTest {
+class ApiTest {
     @Test
     fun yandex_api_works() {
         runBlocking {
@@ -33,3 +33,4 @@ class WordDialogTest {
         }
     }
 }
+

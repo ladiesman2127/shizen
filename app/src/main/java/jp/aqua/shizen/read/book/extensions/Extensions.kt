@@ -1,8 +1,6 @@
 package jp.aqua.shizen.read.book.extensions
 
-import android.content.Context
-import android.net.Uri
-import com.mohamedrejeb.ksoup.entities.KsoupEntities
+import android.util.Log
 import com.mohamedrejeb.ksoup.html.parser.KsoupHtmlHandler
 import com.mohamedrejeb.ksoup.html.parser.KsoupHtmlOptions
 import com.mohamedrejeb.ksoup.html.parser.KsoupHtmlParser
@@ -19,6 +17,10 @@ import java.util.UUID
 private fun parseChapter(chapter: ByteArray): ByteArray {
     var body = false
     val parsedChapter = StringBuilder()
+    val options = KsoupHtmlOptions(
+        decodeEntities = false,
+        lowerCaseAttributeNames = false
+    )
     val handler = KsoupHtmlHandler
         .Builder()
         .onText { text ->
@@ -32,40 +34,33 @@ private fun parseChapter(chapter: ByteArray): ByteArray {
             }
             if (text == "<" || text == ">")
                 return@onText
-            val text = text.replace('\n', ' ')
             val iterator = BreakIterator.getSentenceInstance()
             iterator.setText(text)
             var start: Int = iterator.first()
             var end: Int = iterator.next()
             while (end != BreakIterator.DONE) {
-                parsedChapter.append("<sentence>")
                 val sentence = text.substring(start, end)
-                val words = sentence.split(' ').filter { it != " " && it.isNotBlank() }
-                for (word in words) {
-                    if (word != "<" && word != ">") {
-                        if (!word.contains("&"))
+                if (sentence.isNotBlank()) {
+                    parsedChapter.append("<sentence>")
+                    val words = sentence.split(' ').filter { it.isNotBlank() }
+                    for (word in words) {
+                        if (word != "<" && word != ">") {
                             parsedChapter.append("<word>$word</word> ")
-                        else
-                            parsedChapter.append("<word>${KsoupEntities.encodeHtml(word)}</word> ")
+                        }
                     }
-                    start = end
-                    end = iterator.next()
+                    parsedChapter.append("</sentence>")
                 }
-                parsedChapter.append("</sentence>")
+                start = end
+                end = iterator.next()
             }
         }
+
         .onOpenTag { name, attributes, _ ->
             if (name == "body")
                 body = true
             parsedChapter.append("<$name")
             attributes.forEach { (attribute, value) ->
-                parsedChapter.append(
-                    when (attribute) {
-                        "preserveaspectratio" -> " preserveAspectRatio=\"$value\""
-                        "viewbox" -> " viewBox=\"$value\""
-                        else -> " $attribute=\"$value\""
-                    }
-                )
+                parsedChapter.append(" $attribute = \"$value\"")
             }
             parsedChapter.append(">")
         }
@@ -78,9 +73,12 @@ private fun parseChapter(chapter: ByteArray): ByteArray {
         }
         .build()
 
-    val ksoupHtmlParser = KsoupHtmlParser(handler)
+    val ksoupHtmlParser = KsoupHtmlParser(handler = handler, options = options)
     ksoupHtmlParser.write(String(chapter))
-    return parsedChapter.toString().toByteArray()
+    ksoupHtmlParser.end()
+    val result = parsedChapter.toString().toByteArray()
+    parsedChapter.clear()
+    return result
 }
 
 fun Book.parseChapters() {
@@ -120,12 +118,18 @@ suspend fun Book.storeCoverImage(coverDir: File): File =
     }
 
 private fun getJS(): String {
-    return "    <script>\n" +
-            "       var words = document.querySelectorAll('word')\n" +
-            "       words.forEach(word => {\n" +
-            "           word.addEventListener(\"click\", () => {\n" +
-            "               android.onOpenWordDef(word.textContent, word.parentElement.textContent)\n" +
-            "           })\n" +
-            "       })\n" +
-            "   </script>"
+    return "<script>\n" +
+            "const words = document.querySelectorAll('word')\n" +
+            "words.forEach((word) => {\n" +
+            "    word.addEventListener('click', () => {\n" +
+            "        word.setAttribute('style', 'background-color: transparent;')\n" +
+            "        android.onOpenWordDef(word.textContent, word.parentElement.textContent)\n" +
+            "    })\n" +
+            "    if(android.isKnownWord(word)) {\n" +
+            "        word.setAttribute('style', 'background-color: transparent;')\n" +
+            "    } else {\n" +
+            "        word.setAttribute('style', 'background-color: yellow;')\n" +
+            "    }\n" +
+            "})\n" +
+            "</script>\n"
 }

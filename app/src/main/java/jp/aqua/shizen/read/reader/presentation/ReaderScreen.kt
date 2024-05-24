@@ -1,7 +1,6 @@
 package jp.aqua.shizen.read.reader.presentation
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.View
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,13 +11,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.FragmentContainerView
-import jp.aqua.shizen.dictionary.word.WordDialog
-import jp.aqua.shizen.dictionary.word.WordDialogUiState
+import jp.aqua.shizen.dictionary.worddialog.WordDialog
+import jp.aqua.shizen.dictionary.worddialog.WordDialogUiState
 import jp.aqua.shizen.utils.scaffold.ShizenTopBar
 import org.readium.r2.shared.ExperimentalReadiumApi
 

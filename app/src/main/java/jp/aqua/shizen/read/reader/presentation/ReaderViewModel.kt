@@ -4,7 +4,7 @@ import android.util.Log
 import android.webkit.JavascriptInterface
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.viewModelScope
-import jp.aqua.shizen.dictionary.word.WordDialogViewModel
+import jp.aqua.shizen.dictionary.worddialog.WordDialogViewModel
 import jp.aqua.shizen.read.reader.data.ReaderRepository
 import jp.aqua.shizen.utils.extensions.clean
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,26 +26,37 @@ class ReaderViewModel(
     private val readerRepository: ReaderRepository,
 ) : WordDialogViewModel() {
 
-    class JsInterface(val link: Link, val open: (String, String) -> Unit) {
+    private var knownWords = readerRepository.knownWords
+    private var bookInitData = readerRepository.bookInitData
+
+    class JsInterface(
+        val link: Link,
+        val knownWords: Map<String, Int>,
+        val open: (String, String) -> Unit
+    ) {
         @JavascriptInterface
         fun onOpenWordDef(word: String, sentence: String) {
             val cleanedSentence = sentence.clean()
             val cleanedWord = word.clean()
             open(cleanedWord, cleanedSentence)
         }
-    }
 
-    private var bookInitData = readerRepository.bookInitData
+        @JavascriptInterface
+        fun isKnownWord(word: String): Boolean = knownWords.containsKey(word)
+
+        @JavascriptInterface
+        fun getWordLevel(word: String): Int = knownWords[word] ?: 0
+    }
 
     @OptIn(ExperimentalReadiumApi::class, ExperimentalDecorator::class)
     private val _uiState = MutableStateFlow(
         ReaderUiState(
             isShowBars = false,
             bookTitle = bookInitData.book.title,
-            navigatorFactory = bookInitData.navigatorFactory
+            fragmentFactory = bookInitData.navigatorFactory
                 .createFragmentFactory(
                     initialLocator = bookInitData.initialLocator,
-                    initialPreferences = EpubPreferences(theme = Theme.DARK),
+                    // initialPreferences = EpubPreferences(theme = Theme.DARK),
                     paginationListener = object : EpubNavigatorFragment.PaginationListener {
                         override fun onPageChanged(
                             pageIndex: Int,
@@ -61,6 +72,7 @@ class ReaderViewModel(
                             registerJavascriptInterface("android") { link ->
                                 JsInterface(
                                     link = link,
+                                    knownWords = knownWords,
                                     open = { word, sentence ->
                                         onOpenWordDef(word, sentence)
                                     }
@@ -86,16 +98,13 @@ class ReaderViewModel(
 
     fun updateIsShowBars() {
         _uiState.update { uiState ->
-            viewModelScope.launch {
-                Log.i("PAGE", uiState.fragment?.evaluateJavascript("document.body.innerHTML") ?: "")
-            }
             val isShowBars = !uiState.isShowBars
             uiState.copy(isShowBars = isShowBars)
         }
     }
 
     fun updateContainer(id: Int) {
-        if(id == _uiState.value.containerID) return
+        if (id == _uiState.value.containerID) return
         _uiState.update { uiState ->
             uiState.copy(containerID = id)
         }
@@ -104,7 +113,7 @@ class ReaderViewModel(
 
     private fun generateFragment() {
         _uiState.update { uiState ->
-            val fragment = (uiState.navigatorFactory.instantiate(
+            val fragment = (uiState.fragmentFactory.instantiate(
                 ClassLoader.getSystemClassLoader(),
                 EpubNavigatorFragment::class.java.name
             ) as EpubNavigatorFragment)
@@ -124,12 +133,18 @@ class ReaderViewModel(
         }
     }
 
+    override fun onCleared() {
+        viewModelScope.launch {
+            // readerRepository.updateKnownWords(knownWords)
+            super.onCleared()
+        }
+    }
 }
 
 data class ReaderUiState(
     val isShowBars: Boolean = false,
     val bookTitle: String,
-    val navigatorFactory: FragmentFactory,
+    val fragmentFactory: FragmentFactory,
     val containerID: Int? = null,
     val fragment: EpubNavigatorFragment? = null
 )

@@ -1,4 +1,4 @@
-package jp.aqua.shizen.dictionary.word
+package jp.aqua.shizen.dictionary.worddialog
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -31,7 +31,6 @@ import jp.aqua.shizen.R
 import jp.aqua.shizen.utils.dialog.ShizenAlertDialog
 
 const val TOGGLE_TRANSLATION_BUTTON_TAG = "TOGGLE TRANSLATION"
-const val IMAGE_TAG = "IMAGE_TAG"
 const val TRANSLATED_WORD = "TRANSLATED_WORD_TAG"
 const val TRANSLATED_SENTENCE = "TRANSLATED_SENTENCE_TAG"
 

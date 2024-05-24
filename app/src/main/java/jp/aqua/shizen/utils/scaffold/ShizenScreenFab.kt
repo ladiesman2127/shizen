@@ -1,6 +1,7 @@
 package jp.aqua.shizen.utils.scaffold
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -30,7 +31,7 @@ fun ShizenScreenFab(
     val context = LocalContext.current
 
     val bookAddLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.GetMultipleContents()
+        ActivityResultContracts.OpenMultipleDocuments()
     ) { uris ->
         if (uris.isNotEmpty()) {
             coroutineScope.launch {
@@ -41,7 +42,11 @@ fun ShizenScreenFab(
                     }
                 )
             }
-            for (uri in uris)
+            for (uri in uris) {
+                context.contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
                 coroutineScope.launch {
                     addBook(uri, context)
                         .onSuccess { bookTitle ->
@@ -62,6 +67,7 @@ fun ShizenScreenFab(
                                 )
                         }
                 }
+            }
         }
     }
 
@@ -73,7 +79,7 @@ fun ShizenScreenFab(
             onClick = {
                 when (currentScreen) {
                     ShizenScreen.Read -> {
-                        bookAddLauncher.launch(MediatypeService.EPUB.name)
+                        bookAddLauncher.launch(arrayOf(MediatypeService.EPUB.name))
                     }
 
                     ShizenScreen.Listen -> {

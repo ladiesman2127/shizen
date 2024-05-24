@@ -1,32 +1,32 @@
 package jp.aqua.shizen
 
+// Импорт необходимых библиотек
 import android.os.Bundle
-import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
-import jp.aqua.shizen.dictionary.presentation.DictionaryViewModel
-import jp.aqua.shizen.listen.presentation.ListenViewModel
 import jp.aqua.shizen.navigation.RootNavHost
-import jp.aqua.shizen.read.presentation.ReadViewModel
 import jp.aqua.shizen.ui.theme.ShizenTheme
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
+    // Перезапись методы родительского класса
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Вызов методы родительского класса
         super.onCreate(savedInstanceState)
+        // Включение режима edge-to-edge для отображения приложения по всему экрану
         enableEdgeToEdge()
+        // Установка содержания
         setContent {
+            // Определение темы приложения
             ShizenTheme {
+                // Вызов главного Root хоста навигации
                 RootNavHost()
             }
         }
     }
-
 }
+
+
 
 

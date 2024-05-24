@@ -14,7 +14,6 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.commit
-import androidx.lifecycle.viewmodel.compose.viewModel
 import jp.aqua.shizen.AppViewModelProvider
 import jp.aqua.shizen.read.reader.presentation.ReaderScreen
 import jp.aqua.shizen.read.reader.presentation.ReaderViewModel
@@ -26,13 +25,8 @@ class ReaderActivity : AppCompatActivity() {
     @OptIn(ExperimentalReadiumApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         val viewModel: ReaderViewModel by viewModels { AppViewModelProvider.Factory }
-        supportFragmentManager.fragmentFactory = viewModel.uiState.value.navigatorFactory
+        supportFragmentManager.fragmentFactory = viewModel.uiState.value.fragmentFactory
         enableEdgeToEdge()
-        WindowCompat.getInsetsController(window, window.decorView).apply {
-            hide(WindowInsetsCompat.Type.navigationBars())
-            hide(WindowInsetsCompat.Type.statusBars())
-            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        }
         super.onCreate(savedInstanceState)
         setContent {
             val uiState by viewModel.uiState.collectAsState()
@@ -63,7 +57,6 @@ class ReaderActivity : AppCompatActivity() {
                         }
                     },
                     updateContainer = { id ->
-                        Log.i("UPDATE CONTAINER", id.toString())
                         viewModel.updateContainer(id)
                     }
                 )
@@ -71,4 +64,6 @@ class ReaderActivity : AppCompatActivity() {
         }
     }
 }
+
+
 

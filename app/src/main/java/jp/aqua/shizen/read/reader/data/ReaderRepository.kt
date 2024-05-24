@@ -1,9 +1,15 @@
 package jp.aqua.shizen.read.reader.data
 
+import android.util.Log
+import jp.aqua.shizen.dictionary.knownwords.data.KnownWordsDao
+import jp.aqua.shizen.dictionary.knownwords.model.KnownWords
 import jp.aqua.shizen.item.model.Item
 import jp.aqua.shizen.item.model.TocEntry
 import jp.aqua.shizen.read.book.data.BookDao
 import jp.aqua.shizen.utils.Readium
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import org.readium.r2.navigator.epub.EpubNavigatorFactory
 import org.readium.r2.shared.ExperimentalReadiumApi
@@ -20,6 +26,7 @@ class ReaderRepository(
     private val bookDao: BookDao
 ) {
     lateinit var bookInitData: BookInitData
+    lateinit var knownWords: Map<String, Int>
 
     suspend fun updateCurrentBook(book: Item, tocEntry: TocEntry?): Try<BookInitData, Error> {
         val publicationFile = File(book.href)
@@ -50,6 +57,10 @@ class ReaderRepository(
                 progression = locator.toJSON().toString()
             )
         )
+
+    fun prepareKnownWords(knownWords: KnownWords?) {
+        this.knownWords = knownWords?.words ?: emptyMap()
+    }
 }
 
 @OptIn(ExperimentalReadiumApi::class)

@@ -1,15 +1,12 @@
 package jp.aqua.shizen.listen.video.presentation
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import jp.aqua.shizen.item.data.ItemRepository
-import jp.aqua.shizen.item.model.LoadingStatus
 import jp.aqua.shizen.item.model.TocEntry
 import jp.aqua.shizen.item.presentation.ItemViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.UUID
 
 class VideoViewModel(
     savedStateHandle: SavedStateHandle,
