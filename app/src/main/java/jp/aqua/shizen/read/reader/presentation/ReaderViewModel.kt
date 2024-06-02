@@ -5,18 +5,17 @@ import android.webkit.JavascriptInterface
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.viewModelScope
 import jp.aqua.shizen.dictionary.worddialog.WordDialogViewModel
+import jp.aqua.shizen.item.model.LoadingStatus
+import jp.aqua.shizen.read.reader.data.BookInitData
 import jp.aqua.shizen.read.reader.data.ReaderRepository
 import jp.aqua.shizen.utils.extensions.clean
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.readium.r2.navigator.ExperimentalDecorator
 import org.readium.r2.navigator.epub.EpubNavigatorFragment
-import org.readium.r2.navigator.epub.EpubPreferences
 import org.readium.r2.navigator.input.InputListener
 import org.readium.r2.navigator.input.TapEvent
-import org.readium.r2.navigator.preferences.Theme
 import org.readium.r2.shared.ExperimentalReadiumApi
 import org.readium.r2.shared.publication.Link
 import org.readium.r2.shared.publication.Locator
@@ -26,14 +25,54 @@ class ReaderViewModel(
     private val readerRepository: ReaderRepository,
 ) : WordDialogViewModel() {
 
-    private var knownWords = readerRepository.knownWords
-    private var bookInitData = readerRepository.bookInitData
+    private fun setStatus(status: LoadingStatus) {
+        _uiState.update { uiState ->
+            uiState.copy(status = status)
+        }
+    }
+
+    private fun setProgress(progress: Float) {
+        _uiState.update { uiState ->
+            uiState.copy(progress = progress)
+        }
+    }
+
+    private var knownWords: MutableMap<String, Int> = readerRepository
+        .knownWords
+        .words
+        .toMutableMap()
+    private var bookInitData: BookInitData = readerRepository.bookInitData
+    private val _ready = MutableStateFlow(false)
+    val ready = _ready.asStateFlow()
 
     class JsInterface(
+        // Данные текущего HTML - файла
         val link: Link,
-        val knownWords: Map<String, Int>,
-        val open: (String, String) -> Unit
+        // Известные слова
+        var knownWords: MutableMap<String, Int>,
+        // Событие нажатия на слово
+        val open: (String, String) -> Unit,
+        val loading: () -> Unit,
+        val success: () -> Unit,
+        val progress: (Float) -> Unit
     ) {
+
+        @JavascriptInterface
+        fun setStatusLoading() {
+            loading()
+        }
+
+        @JavascriptInterface
+        fun setStatusSuccess() {
+            success()
+        }
+
+        @JavascriptInterface
+        fun setLoadingProgress(progress: String) {
+            Log.i("Progress Update Interface", progress.toString())
+            progress(progress.toFloat())
+        }
+
         @JavascriptInterface
         fun onOpenWordDef(word: String, sentence: String) {
             val cleanedSentence = sentence.clean()
@@ -42,13 +81,22 @@ class ReaderViewModel(
         }
 
         @JavascriptInterface
-        fun isKnownWord(word: String): Boolean = knownWords.containsKey(word)
+        fun isKnownWord(word: String): Boolean {
+            return knownWords.containsKey(word)
+        }
+
+        @JavascriptInterface
+        fun setNewWord(word: String) {
+            knownWords.put(word, 0)
+        }
 
         @JavascriptInterface
         fun getWordLevel(word: String): Int = knownWords[word] ?: 0
     }
 
-    @OptIn(ExperimentalReadiumApi::class, ExperimentalDecorator::class)
+    var page = MutableStateFlow(-1)
+
+    @OptIn(ExperimentalReadiumApi::class)
     private val _uiState = MutableStateFlow(
         ReaderUiState(
             isShowBars = false,
@@ -56,7 +104,6 @@ class ReaderViewModel(
             fragmentFactory = bookInitData.navigatorFactory
                 .createFragmentFactory(
                     initialLocator = bookInitData.initialLocator,
-                    // initialPreferences = EpubPreferences(theme = Theme.DARK),
                     paginationListener = object : EpubNavigatorFragment.PaginationListener {
                         override fun onPageChanged(
                             pageIndex: Int,
@@ -65,6 +112,11 @@ class ReaderViewModel(
                         ) {
                             super.onPageChanged(pageIndex, totalPages, locator)
                             bookInitData = bookInitData.copy(initialLocator = locator)
+                        }
+
+                        override fun onPageLoaded() {
+                            super.onPageLoaded()
+                            page.update { page.value + 1 }
                         }
                     },
                     configuration = EpubNavigatorFragment.Configuration()
@@ -75,6 +127,15 @@ class ReaderViewModel(
                                     knownWords = knownWords,
                                     open = { word, sentence ->
                                         onOpenWordDef(word, sentence)
+                                    },
+                                    loading = {
+                                        setStatus(LoadingStatus.Loading)
+                                    },
+                                    success = {
+                                        setStatus(LoadingStatus.Success)
+                                    },
+                                    progress = {
+                                        setProgress(it)
                                     }
                                 )
                             }
@@ -82,7 +143,6 @@ class ReaderViewModel(
                 )
         )
     )
-
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -93,6 +153,10 @@ class ReaderViewModel(
         bookInitData.initialLocator?.let { locator ->
             readerRepository.updateProgression(locator)
         }
+    }
+
+    suspend fun updateWords() {
+        readerRepository.updateKnownWords(knownWords)
     }
 
 
@@ -132,16 +196,11 @@ class ReaderViewModel(
             )
         }
     }
-
-    override fun onCleared() {
-        viewModelScope.launch {
-            // readerRepository.updateKnownWords(knownWords)
-            super.onCleared()
-        }
-    }
 }
 
 data class ReaderUiState(
+    val status: LoadingStatus = LoadingStatus.Loading,
+    val progress: Float = 0.0f,
     val isShowBars: Boolean = false,
     val bookTitle: String,
     val fragmentFactory: FragmentFactory,

@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "jp.aqua.shizen"
-        minSdk = 27
+        minSdk = 29
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -52,6 +52,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "1.8"
@@ -113,6 +114,7 @@ dependencies {
     implementation(libs.readium.shared)
     implementation(libs.readium.streamer)
     implementation(libs.readium.navigator)
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     // Joda
     implementation(libs.joda.time)

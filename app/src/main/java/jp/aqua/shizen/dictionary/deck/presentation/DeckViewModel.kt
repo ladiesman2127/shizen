@@ -61,7 +61,7 @@ class DeckViewModel(
 
     fun saveWordCard() {
         viewModelScope.launch {
-            deckDir = deckDir ?: File(uiState.value.href.ifEmpty { return@launch })
+            deckDir = deckDir ?: File(uiState.value.href?.ifEmpty { return@launch })
             with(_wordCardUiState.value) {
                 cardDir = File(deckDir, "/${UUID.randomUUID()}").apply { mkdir() }
                 val cardIndexFile = deckRepository.storeIndexFile(cardDir!!, front, back)

@@ -1,6 +1,5 @@
 package jp.aqua.shizen
 
-import android.app.Application
 import jp.aqua.shizen.dictionary.deck.data.DeckDatabase
 import jp.aqua.shizen.dictionary.deck.data.DeckRepository
 import jp.aqua.shizen.dictionary.knownwords.data.KnownWordsDao
@@ -14,9 +13,12 @@ import jp.aqua.shizen.read.reader.data.ReaderRepository
 import jp.aqua.shizen.utils.Readium
 import java.io.File
 
-class Application : Application() {
+class Application : android.app.Application() {
+    // Необходим для обработки и отображения книг
     lateinit var readium: Readium
+    // Необходим для создания BookRepository
     lateinit var bookDao: BookDao
+    // Необходим для создания BookRepository
     lateinit var wordsDao: KnownWordsDao
     lateinit var bookRepository: BookRepository
         private set
@@ -26,8 +28,12 @@ class Application : Application() {
         private set
     lateinit var readerRepository: ReaderRepository
         private set
+    // Директория для хранение файлов приложения
     private lateinit var storageDir: File
+    // Директория для хранение обложек книг
     private lateinit var coverDir: File
+
+
     override fun onCreate() {
         super.onCreate()
         storageDir = File(filesDir?.path + "/")
@@ -57,7 +63,7 @@ class Application : Application() {
                         storageDir
                     )
                 }
-        readerRepository = ReaderRepository(readium, bookDao)
+        readerRepository = ReaderRepository(readium, bookDao, wordsDao)
     }
 }
 

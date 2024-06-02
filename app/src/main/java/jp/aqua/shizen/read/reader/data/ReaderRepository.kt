@@ -10,6 +10,7 @@ import jp.aqua.shizen.utils.Readium
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import org.readium.r2.navigator.epub.EpubNavigatorFactory
 import org.readium.r2.shared.ExperimentalReadiumApi
@@ -23,10 +24,11 @@ import java.io.File
 @OptIn(ExperimentalReadiumApi::class)
 class ReaderRepository(
     private val readium: Readium,
-    private val bookDao: BookDao
+    private val bookDao: BookDao,
+    private val wordsDao: KnownWordsDao
 ) {
     lateinit var bookInitData: BookInitData
-    lateinit var knownWords: Map<String, Int>
+    lateinit var knownWords: KnownWords
 
     suspend fun updateCurrentBook(book: Item, tocEntry: TocEntry?): Try<BookInitData, Error> {
         val publicationFile = File(book.href)
@@ -51,15 +53,20 @@ class ReaderRepository(
         return Try.success(bookInitData)
     }
 
-    suspend fun updateProgression(locator: Locator) =
+    suspend fun updateProgression(locator: Locator) = withContext(Dispatchers.IO) {
         bookDao.updateBook(
             bookInitData.book.copy(
                 progression = locator.toJSON().toString()
             )
         )
+    }
+
+    suspend fun updateKnownWords(words: Map<String, Int>) = withContext(Dispatchers.IO) {
+        wordsDao.insert(knownWords.copy(words = words))
+    }
 
     fun prepareKnownWords(knownWords: KnownWords?) {
-        this.knownWords = knownWords?.words ?: emptyMap()
+        this.knownWords = knownWords ?: KnownWords(words = emptyMap())
     }
 }
 

@@ -28,11 +28,9 @@ class BookViewModel(
     ): Try<BookInitData, Error>? =
         withContext(Dispatchers.IO) {
             bookID?.let { id ->
-                Log.i("update", "started")
                 val book = bookRepository.getItemImmediately(id)
                 val res = readerRepository.updateCurrentBook(book, tocEntry)
-                readerRepository.prepareKnownWords(knownWords.firstOrNull())
-                Log.i("Updated", readerRepository.knownWords.toList().toString())
+                readerRepository.prepareKnownWords(knownWords.lastOrNull())
                 res
             }
         }

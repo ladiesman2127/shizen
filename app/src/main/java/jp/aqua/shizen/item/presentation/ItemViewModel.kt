@@ -146,7 +146,7 @@ data class ItemUiState(
     val isAdding: Boolean = false,
     val title: String = "",
     val cover: String? = null,
-    val href: String = "",
+    val href: String? = null,
     val language: String = "",
     val authors: List<String>? = null,
     val tableOfContents: List<TocEntry> = emptyList(),

@@ -20,3 +20,4 @@ data class TextAnnotation(
     @Json(name = "fullText")
     val fullText: String? = null,
 )
+

@@ -17,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import nl.siegmann.epublib.service.MediatypeService
 import kotlin.reflect.KSuspendFunction2
+import kotlin.system.measureTimeMillis
 
 @Composable
 fun ShizenScreenFab(
@@ -48,24 +49,27 @@ fun ShizenScreenFab(
                     Intent.FLAG_GRANT_READ_URI_PERMISSION
                 )
                 coroutineScope.launch {
-                    addBook(uri, context)
-                        .onSuccess { bookTitle ->
-                            if (bookTitle.isNotBlank())
-                                snackbarHostState
-                                    .showSnackbar(
-                                        message = bookTitle + context.getString(
-                                            R.string.added_successfully
-                                        )
-                                    )
-                        }
-                        .onFailure {
-                            snackbarHostState
-                                .showSnackbar(
-                                    message = context.getString(
-                                        R.string.failed_to_add_book
-                                    )
-                                )
-                        }
+                    val res = measureTimeMillis {
+                        addBook(uri, context)
+                    }
+                    println(res)
+//                        .onSuccess { bookTitle ->
+//                            if (bookTitle.isNotBlank())
+//                                snackbarHostState
+//                                    .showSnackbar(
+//                                        message = bookTitle + context.getString(
+//                                            R.string.added_successfully
+//                                        )
+//                                    )
+//                        }
+//                        .onFailure {
+//                            snackbarHostState
+//                                .showSnackbar(
+//                                    message = context.getString(
+//                                        R.string.failed_to_add_book
+//                                    )
+//                                )
+//                        }
                 }
             }
         }

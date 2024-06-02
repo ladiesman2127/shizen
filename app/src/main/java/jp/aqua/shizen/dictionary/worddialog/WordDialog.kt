@@ -109,7 +109,7 @@ fun WordDialog(
                         LinearProgressIndicator(
                             Modifier.fillMaxWidth()
                         )
-                    }
+                    },
                 )
             }
         }

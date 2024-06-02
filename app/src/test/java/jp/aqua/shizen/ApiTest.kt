@@ -5,8 +5,10 @@ import jp.aqua.shizen.dictionary.network.image.ImageRequest
 import jp.aqua.shizen.dictionary.network.image.ImageResponse
 import jp.aqua.shizen.dictionary.network.translation.TranslateApi
 import jp.aqua.shizen.dictionary.network.translation.TranslateRequest
+import jp.aqua.shizen.dictionary.network.translation.TranslateResponse
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
+import kotlin.system.measureTimeMillis
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -17,8 +19,11 @@ class ApiTest {
     @Test
     fun yandex_api_works() {
         runBlocking {
-            val request = TranslateRequest(texts = listOf("Hello world"), to = "ru")
-            val response = TranslateApi.retrofitService.translate(request)
+            val request = TranslateRequest(texts = listOf("Insist"), to = "ru")
+            var response: TranslateResponse
+            println("translate " + measureTimeMillis {
+                response = TranslateApi.retrofitService.translate(request)
+            })
             assert(response.translations != null)
             assert(response.translations?.isNotEmpty() == true)
         }
@@ -28,7 +33,10 @@ class ApiTest {
     fun google_api_works() {
         runBlocking {
             val request = ImageRequest(q = "Apple")
-            val response = ImageApi.retrofitService.image(request.q)
+            var response: ImageResponse
+            println("image " + measureTimeMillis {
+                response = ImageApi.retrofitService.image(request.q)
+            })
             assert(response.items?.isNotEmpty() == true)
         }
     }

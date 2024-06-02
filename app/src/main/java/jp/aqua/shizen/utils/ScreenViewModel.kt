@@ -17,10 +17,10 @@ import kotlinx.coroutines.launch
 
 
 open class ScreenViewModel(private val itemRepository: ItemRepository) : ViewModel() {
-
+    // Состояние U
     protected val _uiState = MutableStateFlow(ScreenUiState())
     val uiState = _uiState.asStateFlow()
-
+        // Методы
     init {
         viewModelScope.launch {
             itemRepository.getAllItems().collect { items ->
@@ -49,7 +49,6 @@ open class ScreenViewModel(private val itemRepository: ItemRepository) : ViewMod
             }
         }
     }
-
     fun turnOnSelection(item: Item) {
         _uiState.update { uiState ->
             uiState.copy(
@@ -58,14 +57,11 @@ open class ScreenViewModel(private val itemRepository: ItemRepository) : ViewMod
             )
         }
     }
-
     fun selectAll(allItems: List<Item>) {
         _uiState.update { uiState ->
             uiState.copy(selectedItems = allItems)
         }
     }
-
-
     fun clearSelection() {
         _uiState.update { uiState ->
             uiState.copy(
@@ -73,7 +69,6 @@ open class ScreenViewModel(private val itemRepository: ItemRepository) : ViewMod
             )
         }
     }
-
     suspend fun removeSelected() {
         if (_uiState.value.isInSelection) {
             for (item in _uiState.value.selectedItems) {
@@ -87,7 +82,6 @@ open class ScreenViewModel(private val itemRepository: ItemRepository) : ViewMod
             }
         }
     }
-
     fun updateSelection(item: Item) {
         _uiState.update { uiState ->
             val prevSelectedItems = uiState.selectedItems
@@ -101,15 +95,12 @@ open class ScreenViewModel(private val itemRepository: ItemRepository) : ViewMod
         if (_uiState.value.selectedItems.isEmpty())
             turnOffSelection()
     }
-
-
     fun turnOffSelection() {
         _uiState.update { uiState ->
             uiState.copy(isInSelection = false, selectedItems = emptyList())
         }
     }
-
-    open fun updateSort(sortField: String) {
+    fun updateSort(sortField: String) {
         _uiState.update { uiState ->
             val sortMode = if (uiState.sortField == sortField) {
                 if (uiState.sortMode == "ASC")
@@ -131,8 +122,7 @@ open class ScreenViewModel(private val itemRepository: ItemRepository) : ViewMod
             )
         }
     }
-
-    open fun updateFilter(field: String, value: String) {
+    fun updateFilter(field: String, value: String) {
         _uiState.value.selectedFilterMap[field]?.let { filterValues ->
             _uiState.update { uiState ->
                 val newFilterMap = uiState.selectedFilterMap.toMutableMap()
@@ -150,14 +140,12 @@ open class ScreenViewModel(private val itemRepository: ItemRepository) : ViewMod
             }
         }
     }
-
-    open fun turnOnFolderAdding() {
+    fun turnOnFolderAdding() {
         _uiState.update { uiState ->
             uiState.copy(isInAddingFolder = true)
         }
     }
-
-    open fun turnOffFolderAdding() {
+    fun turnOffFolderAdding() {
         _uiState.update { uiState ->
             uiState.copy(
                 isInAddingFolder = false,
@@ -167,29 +155,24 @@ open class ScreenViewModel(private val itemRepository: ItemRepository) : ViewMod
             )
         }
     }
-
-    open fun updateFolderTitle(title: String) {
+    fun updateFolderTitle(title: String) {
         _uiState.update { uiState ->
             uiState.copy(folderTitle = title)
         }
     }
-
-    open fun updateFolderCover(cover: String?) {
+    fun updateFolderCover(cover: String?) {
         _uiState.update { uiState ->
             uiState.copy(folderCover = cover)
         }
     }
-
-    open fun updateIsCoverError(isCoverError: Boolean?) {
+    fun updateIsCoverError(isCoverError: Boolean?) {
         _uiState.update { uiState ->
             uiState.copy(isCoverError = isCoverError)
         }
     }
-
     open suspend fun addBook(uri: Uri, context: Context): Result<String> {
         return Result.failure(Exception())
     }
-
     fun updateSearchQuery(query: String) {
         _uiState.update { uiState ->
             uiState.copy(
@@ -201,7 +184,6 @@ open class ScreenViewModel(private val itemRepository: ItemRepository) : ViewMod
             )
         }
     }
-
     fun updateIsInSearch(isInSearch: Boolean) {
         _uiState.update { uiState ->
             uiState.copy(
@@ -210,7 +192,6 @@ open class ScreenViewModel(private val itemRepository: ItemRepository) : ViewMod
             )
         }
     }
-
     open suspend fun addFolder() {}
     fun clearSearchQuery() {
         _uiState.update { uiState ->
@@ -235,21 +216,34 @@ open class ScreenViewModel(private val itemRepository: ItemRepository) : ViewMod
         }
     }
 }
-
 data class ScreenUiState(
+    // Список элементов текущего экрана
     val items: Flow<List<Item>> = flowOf(),
+    // Режим поиска вкл/выкл
     val isInSearch: Boolean = false,
+    // Поисковой запрос
     val searchQuery: String = "",
+    // Режим выборки
     val isInSelection: Boolean = false,
+    // Выбранные элементы
     val selectedItems: List<Item> = listOf(),
+    // Все параметры фильтрации
     val allFilterMap: Map<String, List<String?>> = mapOf(),
+    // Выбранные параметры фильтрации
     val selectedFilterMap: Map<String, List<String>> = mapOf(),
+    // Все поля сортировки
     val allSortFields: List<String> = emptyList(),
+    // Выбранные поля сортировки
     val sortField: String = Item.CREATION_DATE,
+    // Режим сортировки
     val sortMode: String = "ASC",
+    // Режим добавления папки / доски
     val isInAddingFolder: Boolean? = null,
+    // Название папки / доски
     val folderTitle: String = "",
+    // Обложка папки / доски
     val folderCover: String? = null,
+    // Статус обложки
     val isCoverError: Boolean? = null,
 ) {
     fun applyFilterAndSort(

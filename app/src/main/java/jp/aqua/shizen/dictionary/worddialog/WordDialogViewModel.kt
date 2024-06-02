@@ -113,3 +113,4 @@ data class WordDialogUiState(
     val isTranslationVisible: Boolean = false,
     val isWordSelected: Boolean = false,
 )
+

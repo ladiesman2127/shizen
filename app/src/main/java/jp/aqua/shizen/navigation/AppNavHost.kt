@@ -38,7 +38,6 @@ fun AppNavHost(
     // Лист объектов текущего экрана
     items: List<Item>
 ) {
-    // add word bd and color only words which in learning
     NavHost(
         navController = navController,
         // Начальный экран
@@ -47,39 +46,35 @@ fun AppNavHost(
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None }
     ) {
-        composable(route = ShizenScreen.Read.name) {
-            // Экран для чтения книг
+        // Экран для чтения
+        composable(route = ShizenScreen.Read.name) { // Экран для чтения книг
             ReadScreen(
                 modifier = modifier.fillMaxSize(),
                 uiState = uiState,
                 viewModel = viewModel,
                 items = items
-            )
-        }
-        composable(route = ShizenScreen.Listen.name) {
-            // Экран для прослушивания/просмотра
+            ) }
+        // Экран для прослушивания / просмотра
+        composable(route = ShizenScreen.Listen.name) { // Экран для прослушивания/просмотра
             ListenScreen(
                 modifier = modifier.fillMaxSize(),
                 uiState = uiState,
                 viewModel = viewModel,
                 items = items
-            )
-        }
-        composable(route = ShizenScreen.Dictionary.name) {
-            // Словарь
+            ) }
+        // Экран досок со словами
+        composable(route = ShizenScreen.Dictionary.name) { // Словарь
             DictionaryScreen(
                 modifier = modifier.fillMaxSize(),
                 uiState = uiState,
                 viewModel = viewModel,
                 items = items
-            )
-        }
-        composable(route = ShizenScreen.Settings.name) {
-            // Найстроки
+            ) }
+        // Экран настроек
+        composable(route = ShizenScreen.Settings.name) { // Найстроки
             SettingsScreen(
                 modifier = modifier.fillMaxSize(),
-            )
-        }
+            ) }
     }
 }
 

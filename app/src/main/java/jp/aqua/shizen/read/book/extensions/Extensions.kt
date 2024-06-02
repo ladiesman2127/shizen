@@ -119,17 +119,32 @@ suspend fun Book.storeCoverImage(coverDir: File): File =
 
 private fun getJS(): String {
     return "<script>\n" +
+            "android.setStatusLoading()\n" +
             "const words = document.querySelectorAll('word')\n" +
-            "words.forEach((word) => {\n" +
+            "words.forEach((word, i) => {\n" +
             "    word.addEventListener('click', () => {\n" +
             "        word.setAttribute('style', 'background-color: transparent;')\n" +
+            "        updateWord(word.textContent)\n" +
+            "        android.setNewWord(word.textContent)\n" +
             "        android.onOpenWordDef(word.textContent, word.parentElement.textContent)\n" +
             "    })\n" +
-            "    if(android.isKnownWord(word)) {\n" +
-            "        word.setAttribute('style', 'background-color: transparent;')\n" +
-            "    } else {\n" +
-            "        word.setAttribute('style', 'background-color: yellow;')\n" +
-            "    }\n" +
+//            "   if(android.isKnownWord(word.textContent)) {\n" +
+//            "       word.setAttribute('style', 'background-color: transparent;')\n" +
+//            "   } else {\n" +
+//            "       word.setAttribute('style', 'background-color: yellow;')\n" +
+//            "   }\n" +
+//            "   console.log(i / words.length)\n" +
+//            "   android.setLoadingProgress(i / words.length)\n" +
             "})\n" +
+            "android.setLoadingProgress(100.0)\n" +
+            "android.setStatusSuccess()\n" +
+            "console.log('Finished')\n" +
+            "function updateWord(knownWord) {\n" +
+            "    words.forEach((word) => {\n" +
+            "        if(word.textContent == knownWord) {\n" +
+            "            word.setAttribute('style', 'background-color: transparent;')\n" +
+            "        }\n" +
+            "    })\n" +
+            "}\n" +
             "</script>\n"
 }

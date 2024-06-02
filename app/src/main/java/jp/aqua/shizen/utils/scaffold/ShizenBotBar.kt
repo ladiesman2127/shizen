@@ -53,12 +53,18 @@ fun ShizenBotBar(currentScreen: ShizenScreen?, navController: NavHostController)
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
         ) {
             items.forEach { item ->
-                NavigationBarItem(label = {
-                    Text(item.title)
-                }, selected = currentScreen.name == item.screen.name, onClick = {
-                    navController.navigate(item.screen.name) // TODO
-                },
+                NavigationBarItem(
+                    label = {
+                        // Надпись иконки
+                        Text(item.title)
+                    },
+                    selected = currentScreen.name == item.screen.name,
+                    onClick = {
+                        // Навигация на другой экран
+                        navController.navigate(item.screen.name)
+                    },
                     icon = {
+                        // Иконка
                         Icon(
                             imageVector = if (currentScreen.name == item.screen.name) item.selectedIcon
                             else item.unselectedIcon, contentDescription = null
@@ -69,3 +75,6 @@ fun ShizenBotBar(currentScreen: ShizenScreen?, navController: NavHostController)
         }
     }
 }
+
+
+

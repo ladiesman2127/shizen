@@ -104,12 +104,12 @@ fun HomeScreen(
     ) { innerPadding ->
         AppNavHost(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            navController = navController,
-            viewModel = viewModel,
-            uiState = uiState,
-            items = items
+                .fillMaxSize() /* Растянуть NavHost на весь экран */
+                .padding(innerPadding) /* Задать отсуп панелей Scaffold'а */,
+            navController = navController, // navController для переключения между экранами
+            viewModel = viewModel, // viewModel для сохранения состояния
+            uiState = uiState, // Состояние текущего экрана
+            items = items // Список элементов текущего экрана
         )
     }
 }

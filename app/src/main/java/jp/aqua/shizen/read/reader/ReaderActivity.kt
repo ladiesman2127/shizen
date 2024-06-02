@@ -19,17 +19,19 @@ import jp.aqua.shizen.read.reader.presentation.ReaderScreen
 import jp.aqua.shizen.read.reader.presentation.ReaderViewModel
 import jp.aqua.shizen.ui.theme.ShizenTheme
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.readium.r2.shared.ExperimentalReadiumApi
 
 class ReaderActivity : AppCompatActivity() {
     @OptIn(ExperimentalReadiumApi::class)
+    val viewModel: ReaderViewModel by viewModels { AppViewModelProvider.Factory }
     override fun onCreate(savedInstanceState: Bundle?) {
-        val viewModel: ReaderViewModel by viewModels { AppViewModelProvider.Factory }
         supportFragmentManager.fragmentFactory = viewModel.uiState.value.fragmentFactory
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
             val uiState by viewModel.uiState.collectAsState()
+            val pageState by viewModel.page.collectAsState()
             val wordDialogUiState by viewModel.wordDialogUiState.collectAsState()
             val coroutineScope = rememberCoroutineScope()
             ShizenTheme {
@@ -52,6 +54,7 @@ class ReaderActivity : AppCompatActivity() {
                     viewModel = viewModel,
                     onCloseReader = {
                         coroutineScope.launch {
+                            viewModel.updateWords()
                             viewModel.updateProgression()
                             finish()
                         }
@@ -61,6 +64,13 @@ class ReaderActivity : AppCompatActivity() {
                     }
                 )
             }
+        }
+    }
+
+    override fun onDestroy() {
+        runBlocking {
+            viewModel.updateWords()
+            super.onDestroy()
         }
     }
 }

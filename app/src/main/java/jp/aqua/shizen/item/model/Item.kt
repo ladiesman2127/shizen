@@ -4,32 +4,44 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-    @Entity(tableName = Item.TABLE_NAME)
-    data class Item(
-        @PrimaryKey(autoGenerate = true)
-        @ColumnInfo(name = ID)
-        val id: Int? = null,
-        @ColumnInfo(name = TITLE)
-        val title: String,
-        @ColumnInfo(name = COVER)
-        val cover: String? = null,
-        @ColumnInfo(name = HREF)
-        val href: String,
-        @ColumnInfo(name = AUTHOR)
-        val authors: List<String>? = null,
-        @ColumnInfo(name = LANGUAGE)
-        val language: String = "EN",
-        @ColumnInfo(name = CREATION_DATE)
-        val creation: Long,
-        @ColumnInfo(name= PROGRESSION)
-        val progression: String = "{}",
-        @ColumnInfo(name = STATUS)
-        val status: Status = Status.NotStarted,
-        @ColumnInfo(name = DESCRIPTION)
-        val description: String? = null,
-        @ColumnInfo(name = TABLE_OF_CONTENTS)
-        val tableOfContents: List<TocEntry> = emptyList()
-    ) {
+@Entity(tableName = Item.TABLE_NAME)
+data class Item(
+    // Аннотация для определения первичного ключа с автоматической генерацией
+    @PrimaryKey(autoGenerate = true)
+    // Определение название слобца в базе данных
+    @ColumnInfo(name = ID)
+    val id: Int? = null,
+    @ColumnInfo(name = TITLE)
+    // Название книги/папки/доски
+    val title: String,
+    @ColumnInfo(name = COVER)
+    // Путь к обложке, которая сохраняется локально
+    val cover: String? = null,
+    @ColumnInfo(name = HREF)
+    // Путь к основному файлу, если такой имеется
+    val href: String? = null,
+    @ColumnInfo(name = AUTHOR)
+    // Список авторов
+    val authors: List<String>? = null,
+    @ColumnInfo(name = LANGUAGE)
+    // Язык материала
+    val language: String = "EN",
+    @ColumnInfo(name = CREATION_DATE)
+    // Дата добавления/создания
+    val creation: Long,
+    @ColumnInfo(name = PROGRESSION)
+    // Отображение прогресса, необходимо только при работе с книгами
+    val progression: String = "{}",
+    @ColumnInfo(name = STATUS)
+    // Статус (не начат, начат, закончен)
+    val status: Status = Status.NotStarted,
+    @ColumnInfo(name = DESCRIPTION)
+    // Описание
+    val description: String? = null,
+    @ColumnInfo(name = TABLE_OF_CONTENTS)
+    // Содержание, список глав книги / видео / аудио / карточек слов
+    val tableOfContents: List<TocEntry> = emptyList()
+) {
 
     fun doesMatchSearchQuery(query: String): Boolean {
         return title.lowercase().contains(query.lowercase())
@@ -50,3 +62,4 @@ import androidx.room.PrimaryKey
         const val TABLE_OF_CONTENTS = "table_of_contents"
     }
 }
+

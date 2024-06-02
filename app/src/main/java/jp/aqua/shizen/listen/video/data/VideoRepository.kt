@@ -17,7 +17,6 @@ class VideoRepository(
             cover = cover,
             creation = DateTime().toDate().time,
             language = "",
-            href = ""
         )
     )
 
