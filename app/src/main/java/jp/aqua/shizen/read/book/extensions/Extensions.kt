@@ -123,26 +123,18 @@ private fun getJS(): String {
             "const words = document.querySelectorAll('word')\n" +
             "words.forEach((word, i) => {\n" +
             "    word.addEventListener('click', () => {\n" +
-            "        word.setAttribute('style', 'background-color: transparent;')\n" +
+            "        word.setAttribute('style', 'background-color: transparent; border-radius: 25%;')\n" +
             "        updateWord(word.textContent)\n" +
             "        android.setNewWord(word.textContent)\n" +
             "        android.onOpenWordDef(word.textContent, word.parentElement.textContent)\n" +
             "    })\n" +
-//            "   if(android.isKnownWord(word.textContent)) {\n" +
-//            "       word.setAttribute('style', 'background-color: transparent;')\n" +
-//            "   } else {\n" +
-//            "       word.setAttribute('style', 'background-color: yellow;')\n" +
-//            "   }\n" +
-//            "   console.log(i / words.length)\n" +
-//            "   android.setLoadingProgress(i / words.length)\n" +
             "})\n" +
             "android.setLoadingProgress(100.0)\n" +
             "android.setStatusSuccess()\n" +
-            "console.log('Finished')\n" +
             "function updateWord(knownWord) {\n" +
             "    words.forEach((word) => {\n" +
             "        if(word.textContent == knownWord) {\n" +
-            "            word.setAttribute('style', 'background-color: transparent;')\n" +
+            "            word.setAttribute('style', 'background-color: transparent; border-radius: 25%;')\n" +
             "        }\n" +
             "    })\n" +
             "}\n" +
