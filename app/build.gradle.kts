@@ -148,6 +148,23 @@ dependencies {
     // Permissions
     implementation(libs.accompanist.permissions)
 
+    // MLKit
+    // Text recognition
+    // To recognize Latin script
+    implementation(libs.mlkit.text.recognition)
+
+    // To recognize Chinese script
+    implementation(libs.text.recognition.chinese)
+
+    // To recognize Devanagari script
+    implementation (libs.text.recognition.devanagari)
+
+    // To recognize Japanese script
+    implementation (libs.text.recognition.japanese)
+
+    // To recognize Korean script
+    implementation (libs.text.recognition.korean)
+
     // Test
     testImplementation(libs.junit)
 

@@ -1,7 +1,7 @@
 
 [versions]
 accompanist = "0.35.0-alpha"
-agp = "8.4.1"
+agp = "8.5.2"
 appcompat = "1.6.1"
 coilCompose = "2.6.0"
 coil = "2.6.0"
@@ -36,6 +36,11 @@ reorderable = "2.1.1"
 retrofit = "2.11.0"
 roomRuntime = "2.6.1"
 slf4jApi = "2.0.9"
+textRecognitionChinese = "16.0.1"
+textRecognitionDevanagari = "16.0.1"
+textRecognitionJapanese = "16.0.1"
+textRecognitionKorean = "16.0.1"
+textRecognitionVersion = "16.0.1"
 uiTestAndroid = "1.6.7"
 uiTestManifest = "1.6.7"
 workRuntimeKtx = "2.9.0"
@@ -81,6 +86,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 ksoup-html = { module = "com.mohamedrejeb.ksoup:ksoup-html", version.ref = "ksoup" }
 ksoup-entities = { module = "com.mohamedrejeb.ksoup:ksoup-entities", version.ref = "ksoup" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
+mlkit-text-recognition = { module = "com.google.mlkit:text-recognition", version.ref = "textRecognitionVersion" }
 moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshiKotlinCodegen" }
 moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshiKotlin" }
 readium-navigator = { module = "org.readium.kotlin-toolkit:readium-navigator", version.ref = "readiumNavigator" }
@@ -89,6 +95,10 @@ readium-shared = { module = "org.readium.kotlin-toolkit:readium-shared", version
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApi" }
+text-recognition-korean = { module = "com.google.mlkit:text-recognition-korean", version.ref = "textRecognitionKorean" }
+text-recognition-japanese = { module = "com.google.mlkit:text-recognition-japanese", version.ref = "textRecognitionJapanese" }
+text-recognition-devanagari = { module = "com.google.mlkit:text-recognition-devanagari", version.ref = "textRecognitionDevanagari" }
+text-recognition-chinese = { module = "com.google.mlkit:text-recognition-chinese", version.ref = "textRecognitionChinese" }
 ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
 ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version = "1.7.0-beta01" }
 
